@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h3>Файл завантажено успішно!</h3>
+  <p>Час завантаження: {{ data.end_time }} секунд</p>
+  <p>Тривалість завантаження: {{ data.duration }} секунд</p>
+  <p>Розмір файлу: {{ data.file_size }} байт</p>
+  <p><a href="{{ data.file_link }}">Скачати файл</a></p>
+
+{% endblock %}
