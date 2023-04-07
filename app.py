@@ -12,9 +12,6 @@ def upload_file():
     if request.method == 'POST':
         file = request.files['file']
         filename = secure_filename(file.filename)
-        if filename == '':
-            flash('Файл відсутній')
-            return redirect(request.url)
         start_time = time.time()
         file.save(os.path.join('files', filename))
         end_time = time.time()
