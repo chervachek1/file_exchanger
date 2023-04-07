@@ -1,6 +1,7 @@
-from flask import Flask, request, url_for, send_file, render_template
+from flask import Flask, request, url_for, send_file, render_template, flash, redirect
 import os
 import time
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
@@ -9,9 +10,12 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        start_time = time.time()
         file = request.files['file']
-        filename = file.filename
+        filename = secure_filename(file.filename)
+        if filename == '':
+            flash('Файл відсутній')
+            return redirect(request.url)
+        start_time = time.time()
         file.save(os.path.join('files', filename))
         end_time = time.time()
         duration = round(end_time - start_time, 2)
