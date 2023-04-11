@@ -1,7 +1,10 @@
-from flask import Flask, request, url_for, send_file, render_template
-import os
-import time
-from werkzeug.utils import secure_filename
+from flask import Flask, render_template, request
+import requests
+import json
+from geopy.distance import geodesic
+import socket
+from urllib.parse import urlparse
+from ip2geotools.databases.noncommercial import DbIpCity
 
 app = Flask(__name__)
 
@@ -9,27 +12,38 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        start_time = time.time()
-        file = request.files['file']
-        filename = secure_filename(file.filename)
-        file.save(os.path.join('files', filename))
-        end_time = time.time()
-        duration = round(end_time - start_time, 2)
-        file_size = os.path.getsize(os.path.join('files', filename))
-        data = {
-            'duration': duration,
-            'end_time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(end_time)),
-            'file_size': file_size,
-            'file_link': url_for('download_file', filename=filename),
+        file_url = request.form['file_url']
+
+        vps = {
+            '64.226.112.111': 'VPS1 Frankfurt',
+            '165.22.8.234': 'VPS2 New York',
+            '159.89.204.189': 'VPS3 Singapore',
         }
-        return render_template('download.html', data=data)
-    return render_template('upload.html')
+        vps1_location = (50.121, 8.4966)  # Frankfurt
+        vps2_location = (40.7128, -74.006)  # New York
+        vps3_location = (1.3521, 103.8198)  # Singapore
 
+        hostname = urlparse(file_url).hostname
+        file_ip = socket.gethostbyname(hostname)
+        res = DbIpCity.get(file_ip, api_key="free")
+        file_location = (res.latitude, res.longitude)
 
-@app.route('/download/<filename>')
-def download_file(filename):
-    path = f'files/{filename}'
-    return send_file(path, as_attachment=True)
+        vps1_distance = geodesic(vps1_location, file_location).km
+        vps2_distance = geodesic(vps2_location, file_location).km
+        vps3_distance = geodesic(vps3_location, file_location).km
+
+        if vps1_distance <= vps2_distance and vps1_distance <= vps3_distance:
+            closest_vps = '64.226.112.111'  # Frankfurt
+        elif vps2_distance <= vps1_distance and vps2_distance <= vps3_distance:
+            closest_vps = '165.22.8.234'  # NY
+        else:
+            closest_vps = '159.89.204.189'  # Singapore
+
+        response = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_url})
+        vps_info = json.loads(response.text)
+        vps_info.update({'vps': vps[closest_vps], 'vps_ip': closest_vps})
+        return render_template('result.html', vps_info=vps_info)
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
