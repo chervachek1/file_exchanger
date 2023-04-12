@@ -16,6 +16,5 @@
     <p>File size: {{ vps_info.file_size / 1000000 }} Mb</p>
     <p>Download link: <a href="http://{{ vps_info.vps_ip }}{{ vps_info.file_link }}">http://{{ vps_info.vps_ip }}{{ vps_info.file_link }}</a></p>
 	{% endfor %}
-    <strong>{% user_ip %}</strong>
 </body>
 </html>

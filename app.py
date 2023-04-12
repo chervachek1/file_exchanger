@@ -32,8 +32,9 @@ def upload_file():
         else:
             closest_vps = '167.172.92.184'  # Singapore
         user_ip = request.remote_addr
+        print(user_ip)
         data = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_link}).json()
-        return render_template('result.html', data=data, user_ip=user_ip)
+        return render_template('result.html', data=data)
     return render_template('index.html')
 
 
