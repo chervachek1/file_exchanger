@@ -15,8 +15,7 @@ def upload_file():
 
         vps1_location = (50.121, 8.4966)  # Frankfurt
         vps2_location = (40.7128, -74.006)  # New York
-        vps3_location = (12.972442, 77.580643)  # Bangalore
-
+        vps3_location = (1.290270, 103.851959)  # Singapore
         hostname = urlparse(file_link).hostname
         file_ip = socket.gethostbyname(hostname)
         res = DbIpCity.get(file_ip, api_key="free")
@@ -27,11 +26,11 @@ def upload_file():
         vps3_distance = geodesic(vps3_location, file_location).km
 
         if vps1_distance <= vps2_distance and vps1_distance <= vps3_distance:
-            closest_vps = '64.226.112.111'  # Frankfurt
+            closest_vps = '64.226.93.194'  # Frankfurt
         elif vps2_distance <= vps1_distance and vps2_distance <= vps3_distance:
-            closest_vps = '165.22.8.234'  # NY
+            closest_vps = '137.184.144.154'  # NY
         else:
-            closest_vps = '64.227.153.22'  # Bangalore
+            closest_vps = '167.172.92.184'  # Singapore
 
         data = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_link}).json()
         return render_template('result.html', data=data)
