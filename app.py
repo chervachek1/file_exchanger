@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 import requests
-import json
 from geopy.distance import geodesic
 import socket
 from urllib.parse import urlparse
@@ -39,10 +38,8 @@ def upload_file():
         else:
             closest_vps = '159.89.204.189'  # Singapore
 
-        response = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_url})
-        vps_info = json.loads(response.text)
-        vps_info.update({'vps': vps[closest_vps], 'vps_ip': closest_vps})
-        return render_template('result.html', vps_info=vps_info)
+        data = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_url}).json()
+        return render_template('result.html', data=data)
     return render_template('index.html')
 
 
