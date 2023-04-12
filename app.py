@@ -11,13 +11,13 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        file_url = request.form['file_url']
+        file_link = request.form['file_url']
 
         vps1_location = (50.121, 8.4966)  # Frankfurt
         vps2_location = (40.7128, -74.006)  # New York
         vps3_location = (12.972442, 77.580643)  # Bangalore
 
-        hostname = urlparse(file_url).hostname
+        hostname = urlparse(file_link).hostname
         file_ip = socket.gethostbyname(hostname)
         res = DbIpCity.get(file_ip, api_key="free")
         file_location = (res.latitude, res.longitude)
@@ -33,7 +33,7 @@ def upload_file():
         else:
             closest_vps = '64.227.153.22'  # Bangalore
 
-        data = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_url}).json()
+        data = requests.post(f'http://{closest_vps}/upload', data={'file_url': file_link}).json()
         return render_template('result.html', data=data)
     return render_template('index.html')
 
