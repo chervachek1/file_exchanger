@@ -14,6 +14,6 @@
 		<p>Time in UTC: {{ vps_info.end_time }}</p>
 		<p>File size: {{ vps_info.file_size }}</p>
 		<p>Download link: <a href="http://{{ vps_info.vps_ip }}{{ vps_info.file_link }}">http://{{ vps_info.vps_ip }}{{ vps_info.file_link }}</a></p>
-	{%endfor%}
+	{% endfor %}
 </body>
 </html>
