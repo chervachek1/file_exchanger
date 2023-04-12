@@ -13,11 +13,6 @@ def upload_file():
     if request.method == 'POST':
         file_url = request.form['file_url']
 
-        vps = {
-            '64.226.112.111': 'VPS1 Frankfurt',
-            '165.22.8.234': 'VPS2 New York',
-            '159.89.204.189': 'VPS3 Singapore',
-        }
         vps1_location = (50.121, 8.4966)  # Frankfurt
         vps2_location = (40.7128, -74.006)  # New York
         vps3_location = (1.3521, 103.8198)  # Singapore

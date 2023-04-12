@@ -5,7 +5,7 @@
 </head>
 <body>
 	<h1>Upload Result</h1>
-	{%for vps_info in data}
+	{%for vps_info in data%}
 		{% if loop.first  %}
 			<p>Selected server: {{ vps_info.vps }} {{ vps_info.vps_ip }}</p>
 		{% else %}
