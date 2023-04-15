@@ -40,14 +40,13 @@ def upload_file():
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    user_ip = request.remote_addr
+    user_ip = request.environ['HTTP_X_FORWARDED_FOR'].split(',')[0]
     res = DbIpCity.get(user_ip, api_key="free")
     user_location = (res.latitude, res.longitude)
 
     vps1_distance = geodesic(vps1_location, user_location).km
     vps2_distance = geodesic(vps2_location, user_location).km
     vps3_distance = geodesic(vps3_location, user_location).km
-    print(request.environ['HTTP_X_FORWARDED_FOR'])
     if vps1_distance <= vps2_distance and vps1_distance <= vps3_distance:
         closest_vps = '68.183.221.123'  # Frankfurt
         vps_name = 'VPS1 Frankfurt'
