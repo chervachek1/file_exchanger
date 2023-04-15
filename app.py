@@ -50,7 +50,7 @@ def download_file(filename):
     print(user_location)
     print(vps1_distance, vps2_distance, vps3_distance)
     print(request.remote_addr)
-    print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr)  )
+    print(request.environ['REMOTE_ADDR'])
     if vps1_distance <= vps2_distance and vps1_distance <= vps3_distance:
         closest_vps = '68.183.221.123'  # Frankfurt
         vps_name = 'VPS1 Frankfurt'
